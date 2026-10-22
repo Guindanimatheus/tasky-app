@@ -1,0 +1,1 @@
+Coloque aqui estado_1.png ... estado_5.png e mude EstadoAvatar.usarArtes para true.
