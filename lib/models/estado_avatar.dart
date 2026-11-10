@@ -13,36 +13,38 @@ enum EstadoAvatar {
     palavrasChave: ['Excesso', 'Estagnação', 'Descuido'],
     xpMinimo: 0,
     frase:
-        'Você se tornou um mestre em procrastinar. '
-        'Vamos dar a volta por cima!',
+        'Você está precisando de ajuda? '
+        'Inicie uma tarefa e você vai melhorar',
   ),
   piorando(
     numero: 2,
     nome: 'Piorando',
     palavrasChave: ['Desorganização', 'Alerta', 'Risco'],
     xpMinimo: 200,
-    frase: 'Atenção antes que piore.',
+    frase:
+        'Você está quase saindo do ciclo da procrastinação, '
+        'não desista!',
   ),
   neutro(
     numero: 3,
     nome: 'Neutro',
     palavrasChave: ['Equilíbrio', 'Flexibilidade', 'Moderação'],
     xpMinimo: 400,
-    frase: 'Podemos melhorar.',
+    frase: 'Foco em evoluir!',
   ),
   indoBem(
     numero: 4,
     nome: 'Indo bem',
     palavrasChave: ['Evolução', 'Equilíbrio', 'Motivação'],
     xpMinimo: 600,
-    frase: 'Pequenos passos, grandes resultados.',
+    frase: 'Tá quase virando um mestre da disciplina!',
   ),
   disciplinado(
     numero: 5,
     nome: 'Disciplinado',
     palavrasChave: ['Foco', 'Constância', 'Resultados'],
     xpMinimo: 800,
-    frase: 'Disciplina gera resultados.',
+    frase: 'Parabéns, você é um mestre da disciplina, continue assim!',
   );
 
   const EstadoAvatar({

@@ -59,8 +59,26 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  # Arquivo por arquivo de propósito: declarar a pasta inteira já
+  # empacotou 17 MB de arte de referência por engano. A referência mora
+  # em arte/, fora de assets/.
   assets:
-    - assets/mascote/
+    # INTERINO: o rig v2 (rive/tasky_v2) está construído mas ainda não
+    # publicado — `rive . --publish` exige sessão. Até lá o app usa o rig
+    # antigo, que anima igual mas está em escala ~1/3 e sai menos nítido.
+    - assets/mascote/tasky_scene.riv
+    # Arte parada: o caminho alternativo de `mascoteParado`, e a fonte
+    # dos cinco moods enquanto o rig só tem o corpo base.
+    - assets/avatar/mood0.webp
+    - assets/avatar/mood1.webp
+    - assets/avatar/mood2.webp
+    - assets/avatar/mood3.webp
+    - assets/avatar/mood4.webp
+    - assets/cenario/mood0.webp
+    # Não há mood2: o mood 2 usa o quarto do mood 1 (ver CenarioTasky).
+    - assets/cenario/mood1.webp
+    - assets/cenario/mood3.webp
+    - assets/cenario/mood4.webp
 
   # Fonte pixel (Press Start 2P, licença OFL) usada só em títulos.
   fonts:

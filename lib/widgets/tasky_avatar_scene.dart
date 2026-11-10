@@ -11,11 +11,12 @@ import 'gato_provisorio.dart';
 
 /// Cena animada do mascote Tasky.
 ///
-/// Com `assets/mascote/tasky_scene.riv` presente, usa o Rive (pacote
+/// Com `assets/mascote/tasky_v2.riv` presente, usa o Rive (pacote
 /// `rive` 0.14) pela API atual de Data Binding: o ViewModel padrão do
 /// artboard deve ter a propriedade numérica `mood` (0 a 4) e o gatilho
 /// `tap`, ligados à máquina de estados `TaskyStateMachine`. Quem anima
-/// cabeça, olhos, reações e o retorno ao loop é o próprio arquivo.
+/// respiração, piscada, orelhas, cauda e a reação ao toque é o próprio
+/// arquivo, construído em `rive/tasky_v2/scene.rml`.
 ///
 /// Sem o arquivo, mostra uma PRÉVIA TEMPORÁRIA desenhada em Flutter, com
 /// cabeça e corpo em camadas separadas.
@@ -28,6 +29,7 @@ class TaskyAvatarScene extends StatefulWidget {
     required this.mood,
     this.tamanho = 200,
     this.arquivo = arquivoPadrao,
+    this.imagemParada,
   });
 
   static const arquivoPadrao = 'assets/mascote/tasky_scene.riv';
@@ -39,6 +41,12 @@ class TaskyAvatarScene extends StatefulWidget {
   final int mood;
   final double tamanho;
   final String arquivo;
+
+  /// Com um caminho aqui, a cena mostra essa arte parada em vez do rig,
+  /// e o `.riv` nem chega a ser carregado. O toque continua respondendo
+  /// com o pulso. Quem liga e desliga é `mascoteParado`, em
+  /// cenario_tasky.dart, que também explica o que se perde de cada lado.
+  final String? imagemParada;
 
   @override
   State<TaskyAvatarScene> createState() => _TaskyAvatarSceneState();
@@ -62,7 +70,7 @@ class _TaskyAvatarSceneState extends State<TaskyAvatarScene>
   @override
   void initState() {
     super.initState();
-    _verificarArquivo();
+    if (widget.imagemParada == null) _verificarArquivo();
   }
 
   Future<void> _verificarArquivo() async {
@@ -134,7 +142,7 @@ class _TaskyAvatarSceneState extends State<TaskyAvatarScene>
     _mood?.value = widget.mood.toDouble();
     if (_mood == null || _tap == null) {
       debugPrint(
-        'tasky_scene.riv: ViewModel sem "${TaskyAvatarScene.propriedadeMood}" '
+        'tasky_v2.riv: ViewModel sem "${TaskyAvatarScene.propriedadeMood}" '
         'ou "${TaskyAvatarScene.gatilhoTap}". Confira o Data Binding.',
       );
     }
@@ -155,6 +163,36 @@ class _TaskyAvatarSceneState extends State<TaskyAvatarScene>
       mood: widget.mood,
       tamanho: s,
     );
+
+    // Caminho da arte parada (mascoteParado): o .riv nem é tocado.
+    if (widget.imagemParada != null) {
+      return GestureDetector(
+        onTap: _tocar,
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedBuilder(
+          animation: _pulso,
+          builder: (context, filho) {
+            final v = math.sin(math.pi * _pulso.value);
+            return Transform.scale(scale: 1 + 0.06 * v, child: filho);
+          },
+          child: SizedBox.square(
+            dimension: s,
+            // Trocar de mood troca a pose inteira; sem a dissolvência
+            // vira corte seco, que salta mais que a própria mudança.
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 350),
+              child: Image.asset(
+                widget.imagemParada!,
+                key: ValueKey(widget.imagemParada),
+                fit: BoxFit.contain,
+                filterQuality: FilterQuality.medium,
+                excludeFromSemantics: true,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     final Widget conteudo = switch (_temArquivo) {
       null => SizedBox.square(dimension: s),
@@ -202,7 +240,7 @@ class _TaskyAvatarSceneState extends State<TaskyAvatarScene>
   }
 }
 
-/// PRÉVIA TEMPORÁRIA: substituir pelo tasky_scene.riv.
+/// PRÉVIA TEMPORÁRIA: só aparece se o .riv faltar ou não decodificar.
 ///
 /// Loop contínuo (respiração, olhar para o celular, piscadas). No toque:
 /// a cabeça gira para a frente e os olhos encaram quem usa o celular, a

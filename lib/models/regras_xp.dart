@@ -17,9 +17,11 @@ abstract final class RegrasXp {
 /// Dificuldade da trilha: quanto cada tarefa vale e quanto se perde
 /// quando ela fica muito atrasada (fração do que ela daria).
 enum Dificuldade {
-  leve(nome: 'Leve', xpPorTarefa: 10, fracaoPerda: 0),
-  media(nome: 'Média', xpPorTarefa: 12, fracaoPerda: 0.5),
-  dificil(nome: 'Difícil', xpPorTarefa: 15, fracaoPerda: 1);
+  leve(nome: 'Fácil', xpPorTarefa: 10, fracaoPerda: 0),
+  facilModerada(nome: 'Fácil a moderada', xpPorTarefa: 11, fracaoPerda: 0.25),
+  media(nome: 'Moderada', xpPorTarefa: 12, fracaoPerda: 0.5),
+  dificil(nome: 'Difícil', xpPorTarefa: 15, fracaoPerda: 1),
+  avancada(nome: 'Avançada', xpPorTarefa: 18, fracaoPerda: 1);
 
   const Dificuldade({
     required this.nome,

@@ -1,0 +1,408 @@
+<Rive version="1" kind="fragment">
+    <!--
+      Cena do mascote Tasky - rig v2, em resolucao cheia.
+
+      Substitui rive/tasky_scene, que foi recortado em escala ~1/3 (cabeca
+      184x187 contra 405x459 daqui) e saia borrado no diorama.
+
+      As pecas vem de arte/avatares/mood2_neutro.png, recortadas na
+      moldura 1024x1536; as posicoes estao em pecas.json e o artboard tem
+      exatamente essa moldura. Assim cada Image fica na coordenada que o
+      recorte ja tinha: nao ha fator de escala para errar, e o Fit.contain
+      do app enquadra o rig igualzinho a arte parada que ele substitui.
+
+      Os dois olhos fechados (olho_*_fechado.png) sao gerados da propria
+      cabeca.png: o vao do olho vira palpebra (pelo de cima em degrade
+      para a pele de baixo) com a linha de cilios tracada na palpebra
+      inferior real. Ficam invisiveis fora da piscada.
+
+      As orelhas sao COPIAS do que continua dentro de cabeca.png, nao
+      recortes subtraidos: em repouso cobrem o original pixel a pixel e
+      giram poucos graus por cima dele. Amplitude grande denuncia a aresta
+      reta do poligono - por isso o giro e de ~2 graus.
+
+      Ordem de desenho: o primeiro irmao declarado fica na FRENTE.
+
+      Camadas de transformacao, de fora para dentro, para que nenhuma
+      animacao dispute propriedade com outra nem com um data bind:
+        reacao          <- Reagir: squash/stretch (pivo nos pes)
+        pulo            <- Reagir: altura do pulinho
+        oprimido        <- reservado para as camadas de semblante
+        corpo-postura   <- posicao do quadril
+        corpo-mood      <- bind: altura pelo mood
+        tronco-curva    <- bind: inclinacao do tronco pelo mood
+        cabeca-postura  <- bind: inclinacao da cabeca pelo mood
+        cauda-postura   <- bind: angulo da cauda pelo mood
+        *-idle          <- Respirar
+        olho-*-fechado  <- Piscar, so opacidade
+
+      O mood vai de 0 (O Procrastinador) a 4 (Disciplinado), e e o
+      `index` do enum EstadoAvatar, nao o `numero` que o app exibe --
+      os dois estao deslocados em um.
+
+      NAO ESTA AQUI AINDA: um semblante por mood. A arte nova traz rosto
+      proprio em cada mood, mas as pecas recortadas sao so as do corpo
+      base (mood 2), entao hoje o humor aparece na POSTURA, nao na cara.
+      Ver "O QUE FALTA CRIAR", item 1, em arte/MOVIMENTOS.md.
+    -->
+    <Artboard defaultStateMachineId="0:7" viewModelId="0:90" viewModelInstanceId="0:93"
+              styleId="0:5" width="1024" height="1536" name="Tasky" id="0:2">
+        <LayoutComponentStyle name="Artboard Style" id="0:5"/>
+
+        <!-- Sem Fill: o fundo vem do quarto, que e asset do Flutter. -->
+
+        <Node name="tasky" id="0:10">
+            <!-- Pivo na base do tenis, para o squash crescer de baixo. -->
+            <Node x="516" y="1521" name="reacao" id="0:11">
+                <Node name="pulo" id="0:12">
+                    <!-- Queda extra do humor baixo. Vazio por enquanto: e
+                         onde as camadas de semblante vao mexer quando
+                         houver rosto por mood. -->
+                    <Node name="oprimido" id="0:13">
+                        <!-- Quadril (485, 826): a barra do moletom, onde
+                             tronco.png e pernas.png se encostam. -->
+                        <Node x="-31" y="-695" name="corpo-postura" id="0:14">
+                            <!-- No proprio para o "mood" nao disputar o y
+                                 da posicao do quadril. -->
+                            <Node name="corpo-mood" id="0:15">
+                                <DataBindContext sourcePathIds="0:90-0:91" propertyKey="14" converterId="0:80"/>
+
+                                <!-- Gira SO o tronco, pelo quadril: e o
+                                     unico jeito de envergar o corpo
+                                     deixando os pes plantados. Pernas,
+                                     tenis e cauda sao irmaos deste no, nao
+                                     filhos, entao ficam parados. Positivo
+                                     leva o peito para a direita de quem
+                                     olha. -->
+                                <Node name="tronco-curva" id="0:16">
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="15" converterId="0:81"/>
+
+                                    <!-- Pescoco (484, 462). -->
+                                    <Node x="-1" y="-364" name="cabeca-postura" id="0:17">
+                                        <DataBindContext sourcePathIds="0:90-0:91" propertyKey="15" converterId="0:82"/>
+                                        <Node name="cabeca-oprimida" id="0:18">
+                                            <Node name="cabeca-idle" id="0:19">
+
+                                                <!-- Olhos fechados: so aparecem na
+                                                     piscada, em corte seco. -->
+                                                <Image assetId="0:69" originX="0" originY="0"
+                                                       x="-119" y="-179" opacity="0"
+                                                       name="olho-esq-fechado" id="0:20"/>
+
+                                                <Image assetId="0:70" originX="0" originY="0"
+                                                       x="0" y="-227" opacity="0"
+                                                       name="olho-dir-fechado" id="0:21"/>
+
+                                                <!-- Pivo na base de cada orelha. -->
+                                                <Image assetId="0:64" originX="0.23899" originY="0.98235"
+                                                       x="-159" y="-202" name="orelha-esq" id="0:22"/>
+
+                                                <Image assetId="0:65" originX="0.29565" originY="0.96838"
+                                                       x="46" y="-209" name="orelha-dir" id="0:23"/>
+
+                                                <Image assetId="0:60" originX="0.48642" originY="0.98910"
+                                                       name="cabeca" id="0:24"/>
+                                            </Node>
+                                        </Node>
+                                    </Node>
+
+                                    <!-- Patas: penduradas nas mangas, fora da
+                                         silhueta do tronco. Pecas proprias para
+                                         ganharem balanco depois. -->
+                                    <Image assetId="0:66" originX="0" originY="0"
+                                           x="-299" y="-66" name="pata-esq" id="0:25"/>
+
+                                    <Image assetId="0:67" originX="0" originY="0"
+                                           x="174" y="-65" name="pata-dir" id="0:26"/>
+
+                                    <Node name="corpo-sag" id="0:27">
+                                        <Node name="corpo-idle" id="0:28">
+                                            <Image assetId="0:61" originX="0.44218" originY="1"
+                                                   name="tronco" id="0:29"/>
+                                        </Node>
+                                    </Node>
+                                </Node>
+
+                                <!-- Pernas atras do tronco, que as cobre: a
+                                     folga entre as duas pecas faz a borda do
+                                     tronco descobrir pixels de verdade quando
+                                     ele enverga. Nunca giram. -->
+                                <Image assetId="0:62" originX="0" originY="0"
+                                       x="-174" y="0" name="pernas" id="0:30"/>
+
+                                <Image assetId="0:68" originX="0" originY="0"
+                                       x="-264" y="539" name="tenis" id="0:31"/>
+
+                                <!-- Raiz da cauda (634, 883), escondida atras
+                                     do quadril. -->
+                                <Node x="149" y="57" name="cauda-postura" id="0:32">
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="15" converterId="0:83"/>
+                                    <Node name="cauda-oprimida" id="0:33">
+                                        <Node name="cauda-reacao" id="0:34">
+                                            <Node name="cauda-base" id="0:35">
+                                                <!-- O arco da cauda com UMA peca so:
+                                                     "cauda-base" gira pela raiz e
+                                                     "cauda-ponta" gira de novo pelo
+                                                     meio do rabo, atrasada meio
+                                                     tempo. O segundo giro tambem
+                                                     desloca a raiz, mas a raiz esta
+                                                     atras do quadril e nao aparece -
+                                                     o que se ve e a ponta atrasando
+                                                     em relacao a base. Duas pecas
+                                                     ou um mesh dariam o arco de
+                                                     verdade; ver "Falta recortar"
+                                                     em arte/MOVIMENTOS.md. -->
+                                                <Node x="166" y="127" name="cauda-ponta" id="0:36">
+                                                    <Image assetId="0:63" originX="0.46216" originY="0.45215"
+                                                           name="cauda" id="0:37"/>
+                                                </Node>
+                                            </Node>
+                                        </Node>
+                                    </Node>
+                                </Node>
+                            </Node>
+                        </Node>
+                    </Node>
+                </Node>
+            </Node>
+        </Node>
+
+        <StateMachine name="TaskyStateMachine" id="0:7">
+            <!-- O toque chega pelo gatilho "tap" do ViewModel, nao por
+                 listener: o widget usa RiveHitTestBehavior.none e e o
+                 GestureDetector do Flutter que decide a area tocavel. -->
+
+            <StateMachineLayer name="idle" id="0:40">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:41"/>
+                </EntryState>
+                <AnimationState x="220" y="20" animationId="0:50" id="0:41"/>
+            </StateMachineLayer>
+
+            <StateMachineLayer name="piscar" id="0:42">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:43"/>
+                </EntryState>
+                <AnimationState x="220" y="20" animationId="0:51" id="0:43"/>
+            </StateMachineLayer>
+
+            <StateMachineLayer name="reacao" id="0:44">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:45"/>
+                </EntryState>
+
+                <AnimationState x="220" y="20" animationId="0:53" id="0:45">
+                    <StateTransition stateToId="0:46" duration="0">
+                        <TransitionViewModelCondition>
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyTrigger>
+                                    <DataBindContext sourcePathIds="0:90-0:92" propertyKey="686"/>
+                                </BindablePropertyTrigger>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueTriggerComparator/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+
+                <AnimationState x="420" y="20" animationId="0:52" id="0:46">
+                    <StateTransition stateToId="0:45" duration="90"
+                                     enableExitTime="true" exitTimeIsPercetange="true"
+                                     exitTime="100"/>
+                </AnimationState>
+            </StateMachineLayer>
+        </StateMachine>
+
+        <!-- Respiracao, microbalanco da cabeca, tremida das orelhas e
+             balanco da cauda. 3s em loop. -->
+        <LinearAnimation loopValue="loop" duration="180" name="Respirar" id="0:50">
+            <KeyedObject objectId="0:28">
+                <KeyedProperty property="scaleY">
+                    <KeyFrameDouble value="1" interpolationType="cubic"/>
+                    <KeyFrameDouble value="1.018" interpolationType="cubic" frame="90"/>
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+                <KeyedProperty property="scaleX">
+                    <KeyFrameDouble value="1" interpolationType="cubic"/>
+                    <KeyFrameDouble value="0.993" interpolationType="cubic" frame="90"/>
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+                <KeyedProperty property="y">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="-10" interpolationType="cubic" frame="90"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:19">
+                <KeyedProperty property="y">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="-8" interpolationType="cubic" frame="90"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="0.011" interpolationType="cubic" frame="60"/>
+                    <KeyFrameDouble value="-0.009" interpolationType="cubic" frame="125"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <!-- Orelhas fora de compasso uma com a outra, senao viram
+                 antena de carro. -->
+            <KeyedObject objectId="0:22">
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="-0.035" interpolationType="cubic" frame="50"/>
+                    <KeyFrameDouble value="0.02" interpolationType="cubic" frame="120"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:23">
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="0.03" interpolationType="cubic" frame="62"/>
+                    <KeyFrameDouble value="-0.022" interpolationType="cubic" frame="130"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:35">
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="-0.13" interpolationType="cubic" frame="45"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="90"/>
+                    <KeyFrameDouble value="0.09" interpolationType="cubic" frame="135"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <!-- A ponta atrasa 15 quadros em relacao a base: e isso que da
+                 o chicote. -->
+            <KeyedObject objectId="0:36">
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="-0.10" interpolationType="cubic" frame="60"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="105"/>
+                    <KeyFrameDouble value="0.07" interpolationType="cubic" frame="150"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <!-- Piscada. 5s em loop, fora do compasso da respiracao, com duas
+             piscadas em tempos diferentes para nao soar mecanico. -->
+        <LinearAnimation loopValue="loop" duration="300" name="Piscar" id="0:51">
+            <KeyedObject objectId="0:20">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="40"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="46"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="208"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="213"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:21">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="40"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="46"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="208"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="213"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <!-- Reacao ao toque: agacha, pula, estica no ar e amortece na
+             aterrissagem. A cauda da um tranco no impulso. 0,67s. -->
+        <LinearAnimation duration="40" name="Reagir" id="0:52">
+            <KeyedObject objectId="0:12">
+                <KeyedProperty property="y">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="10" interpolationType="cubic" frame="6"/>
+                    <KeyFrameDouble value="-87" interpolationType="cubic" frame="15"/>
+                    <KeyFrameDouble value="-97" interpolationType="cubic" frame="21"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="28"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="40"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:11">
+                <KeyedProperty property="scaleY">
+                    <KeyFrameDouble value="1" interpolationType="cubic"/>
+                    <KeyFrameDouble value="0.90" interpolationType="cubic" frame="6"/>
+                    <KeyFrameDouble value="1.09" interpolationType="cubic" frame="15"/>
+                    <KeyFrameDouble value="1.04" interpolationType="cubic" frame="21"/>
+                    <KeyFrameDouble value="0.91" interpolationType="cubic" frame="28"/>
+                    <KeyFrameDouble value="1.03" interpolationType="cubic" frame="34"/>
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="40"/>
+                </KeyedProperty>
+                <KeyedProperty property="scaleX">
+                    <KeyFrameDouble value="1" interpolationType="cubic"/>
+                    <KeyFrameDouble value="1.08" interpolationType="cubic" frame="6"/>
+                    <KeyFrameDouble value="0.94" interpolationType="cubic" frame="15"/>
+                    <KeyFrameDouble value="0.97" interpolationType="cubic" frame="21"/>
+                    <KeyFrameDouble value="1.09" interpolationType="cubic" frame="28"/>
+                    <KeyFrameDouble value="0.98" interpolationType="cubic" frame="34"/>
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="40"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:34">
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="-0.42" interpolationType="cubic" frame="10"/>
+                    <KeyFrameDouble value="0.18" interpolationType="cubic" frame="22"/>
+                    <KeyFrameDouble value="-0.06" interpolationType="cubic" frame="31"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="40"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <!-- Estado de repouso da camada "reacao": nao mexe em nada. -->
+        <LinearAnimation duration="1" name="Parado" id="0:53"/>
+    </Artboard>
+
+    <ImageAsset file="cabeca.png" name="cabeca" id="0:60"/>
+    <ImageAsset file="tronco.png" name="tronco" id="0:61"/>
+    <ImageAsset file="pernas.png" name="pernas" id="0:62"/>
+    <ImageAsset file="cauda.png" name="cauda" id="0:63"/>
+    <ImageAsset file="orelha_esq.png" name="orelha_esq" id="0:64"/>
+    <ImageAsset file="orelha_dir.png" name="orelha_dir" id="0:65"/>
+    <ImageAsset file="pata_esq.png" name="pata_esq" id="0:66"/>
+    <ImageAsset file="pata_dir.png" name="pata_dir" id="0:67"/>
+    <ImageAsset file="tenis.png" name="tenis" id="0:68"/>
+    <ImageAsset file="olho_esq_fechado.png" name="olho_esq_fechado" id="0:69"/>
+    <ImageAsset file="olho_dir_fechado.png" name="olho_dir_fechado" id="0:70"/>
+
+    <!-- Rampas de postura pelo mood. Enquanto nao houver rosto por mood,
+         e so por aqui que o humor aparece. -->
+    <DataConverterRangeMapper minInput="0" maxInput="4" minOutput="30" maxOutput="-6"
+                              clampLower="true" clampUpper="true"
+                              name="moodParaAltura" id="0:80"/>
+    <DataConverterRangeMapper minInput="0" maxInput="4" minOutput="0.06" maxOutput="-0.015"
+                              clampLower="true" clampUpper="true"
+                              name="moodParaTronco" id="0:81"/>
+    <DataConverterRangeMapper minInput="0" maxInput="4" minOutput="0.12" maxOutput="-0.04"
+                              clampLower="true" clampUpper="true"
+                              name="moodParaCabeca" id="0:82"/>
+    <DataConverterRangeMapper minInput="0" maxInput="4" minOutput="0.28" maxOutput="-0.22"
+                              clampLower="true" clampUpper="true"
+                              name="moodParaCauda" id="0:83"/>
+
+    <ViewModel defaultInstanceId="0:93" name="Tasky" id="0:90">
+        <ViewModelPropertyNumber name="mood" id="0:91"/>
+        <ViewModelPropertyTrigger name="tap" id="0:92"/>
+        <ViewModelInstance exports="true" name="Default" id="0:93">
+            <ViewModelInstanceNumber propertyValue="2" viewModelPropertyId="0:91"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="0:92"/>
+        </ViewModelInstance>
+    </ViewModel>
+</Rive>

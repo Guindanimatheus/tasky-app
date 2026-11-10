@@ -1,0 +1,924 @@
+<Rive version="1" kind="fragment">
+    <!--
+      Cena do mascote Tasky.
+
+      Rig de 3 pecas recortadas da arte de referencia
+      (assets/mascote/ref/tasky_avatar_padrao.png): cabeca, corpo e cauda.
+      A cauda saiu por componente conectado de pelo, dilatado para levar
+      junto o contorno preto; corpo e cauda sao complementares, entao em
+      repouso a remontagem e exata.
+
+      Ordem de desenho: o primeiro irmao declarado fica na FRENTE. Dentro
+      de "corpo-mood" a ordem e cabeca, corpo, cauda; dentro de
+      "cabeca-idle" vem a piscada, depois os semblantes, depois a cabeca.
+
+      Camadas de transformacao, de fora para dentro, para que nenhuma
+      animacao dispute propriedade com outra nem com um data bind:
+        reacao            <- Reagir: squash/stretch (pivo nos pes)
+        pulo              <- Reagir: altura do pulinho
+        oprimido          <- semblante: queda extra do humor
+        corpo-curva       <- bind: inclinacao pelo mood
+        corpo-mood        <- bind: altura pelo mood
+        cabeca-oprimida   <- semblante: cabeca pendendo
+        corpo-sag         <- semblante: corpo murchando
+        cauda-oprimida    <- semblante: rabo recolhido
+        *-idle            <- Respirar
+        rosto-* / olho-*  <- Piscar e semblantes, so opacidade
+
+      O mood vai de 0 (O Procrastinador) a 4 (Disciplinado), e e o
+      `index` do enum EstadoAvatar, nao o `numero` que o app exibe --
+      os dois estao deslocados em um.
+    -->
+    <Artboard defaultStateMachineId="0:7" viewModelId="0:40" viewModelInstanceId="0:41"
+              styleId="0:5" width="500" height="500" name="Tasky" id="0:2">
+        <LayoutComponentStyle name="Artboard Style" id="0:5"/>
+
+        <!-- Sem Fill: o fundo vem do cartao no Flutter. -->
+
+        <Node x="127.9" y="22.5" scaleX="0.715" scaleY="0.715" name="tasky" id="0:10">
+            <!-- Pivo nos pes, para o squash crescer de baixo. -->
+            <Node x="170.75" y="636.3" name="reacao" id="0:11">
+                <Node name="pulo" id="0:23">
+                    <!-- Queda extra, posta pela camada do semblante ativo e nao
+                         por conversor: assim o mood 0 tem postura propria em vez
+                         de so cair um pouco mais que o 1 na mesma rampa. -->
+                    <Node name="oprimido" id="0:28">
+                            <Node x="-38.85" y="-227.6" name="corpo-postura" id="0:12">
+                                <!-- No proprio para o "mood" nao disputar o y da posicao. -->
+                                <Node name="corpo-mood" id="0:22">
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="14" converterId="0:50"/>
+
+                                  <!-- O corpo e cortado em tronco e pernas na barra
+                                       do moletom. Este no gira SO o tronco, pelo
+                                       quadril: e o unico jeito de envergar o corpo
+                                       deixando os pes plantados. Girar a peca
+                                       inteira tirava o gato do lugar, e girar pelos
+                                       pes tombava a figura toda. Positivo leva o
+                                       peito para a direita de quem olha; negativo,
+                                       para a esquerda. -->
+                                  <Node y="-67.24" name="tronco-curva" id="0:59">
+
+                                    <Node y="-163.76" name="cabeca-postura" id="0:13">
+                                        <DataBindContext sourcePathIds="0:40-0:45" propertyKey="15" converterId="0:51"/>
+                                        <Node name="cabeca-oprimida" id="0:29">
+                                            <Node name="cabeca-idle" id="0:14">
+
+                                                <!-- Olhos fechados: recortes gerados a partir
+                                                     da propria arte (ponte de pelo espelhado +
+                                                     linha de cilios no tracado real do olho).
+                                                     So aparecem na piscada, em corte seco. -->
+                                                <Image assetId="0:63" originX="0" originY="0"
+                                                       x="-12.82" y="-89.14" opacity="0"
+                                                       name="olho-dir-fechado" id="0:25"/>
+
+                                                <Image assetId="0:64" originX="0" originY="0"
+                                                       x="-55.24" y="-67.30" opacity="0"
+                                                       name="olho-esq-fechado" id="0:24"/>
+
+                                                <!-- Semblantes: um remendo de rosto por humor,
+                                                     quase todo transparente (so palpebra, iris
+                                                     e boca sao opacas). O neutro e a arte base,
+                                                     sem remendo. Cada um tem sua camada, que o
+                                                     liga pelo "mood". Ficam sob a piscada e
+                                                     sobre a cabeca. -->
+                                                <Image assetId="0:65" originX="0" originY="0"
+                                                       x="-56.92" y="-89.14" opacity="0"
+                                                       name="rosto-muito-desanimado" id="0:26"/>
+
+                                                <Image assetId="0:66" originX="0" originY="0"
+                                                       x="-56.92" y="-89.14" opacity="0"
+                                                       name="rosto-desanimado" id="0:38"/>
+
+                                                <Image assetId="0:68" originX="0" originY="0"
+                                                       x="-56.92" y="-89.14" opacity="0"
+                                                       name="rosto-alegre" id="0:55"/>
+
+                                                <Image assetId="0:60" originX="0.4897" originY="0.9506"
+                                                       name="cabeca" id="0:15"/>
+                                            </Node>
+                                        </Node>
+                                    </Node>
+
+                                    <Node name="corpo-sag" id="0:39">
+                                        <Node name="corpo-idle" id="0:16">
+                                            <Image assetId="0:61" originX="0.4995" originY="0.7470"
+                                                   name="tronco" id="0:17"/>
+                                        </Node>
+                                    </Node>
+                                  </Node>
+
+                                    <!-- Pernas: ficam atras do tronco, que as
+                                         cobre, e nunca giram. A folga entre as
+                                         duas pecas faz a borda do tronco descobrir
+                                         pixels de verdade quando ele enverga. -->
+                                    <Image assetId="0:80" originX="0.4930" originY="0.0410"
+                                           y="-67.24" name="pernas" id="0:69"/>
+
+                                    <Node x="68.9" y="-32.8" name="cauda-postura" id="0:18">
+                                        <DataBindContext sourcePathIds="0:40-0:45" propertyKey="15" converterId="0:52"/>
+                                        <!-- Rabo encolhido do humor baixo, posto pela camada
+                                             do semblante. A escala e em direcao a base da
+                                             cauda, que fica escondida atras da pata, entao
+                                             encolher le como rabo recolhido. Com uma peca
+                                             so nao da para enrola-la sob o corpo. -->
+                                        <Node name="cauda-oprimida" id="0:47">
+                                            <Node name="cauda-reacao" id="0:19">
+                                                <Node name="cauda-idle" id="0:20">
+                                                    <Image assetId="0:62" originX="0.0995" originY="0.1046"
+                                                           name="cauda" id="0:21"/>
+                                                </Node>
+                                            </Node>
+                                        </Node>
+                                    </Node>
+                                </Node>
+                            </Node>
+                        </Node>
+                    </Node>
+                </Node>
+            </Node>
+
+        <!-- Aura de energia do humor mais alto. Declarada DEPOIS do "tasky"
+             para ficar atras dele. Roxo 9B6BE0, o mesmo roxoClaro que o app
+             usa no estado Disciplinado, entao ela casa com o cartao.
+             Dois nos: "aura" liga e desliga pelo humor; "aura-pulso" pulsa
+             sempre. Separados porque os dois mexem em opacidade e brigariam
+             pela mesma propriedade. -->
+        <Node name="aura" id="0:81">
+            <Node name="aura-pulso" id="0:84">
+                <!-- O nucleo vem primeiro: o primeiro irmao fica na frente,
+                     entao o brilho miudo sobrepoe o halo largo. -->
+                <!-- As formas sao CIRCULOS com diametro maior que o dobro do
+                     raio do gradiente. O gradiente radial e circular, entao
+                     numa elipse mais estreita que o raio a forma corta o
+                     gradiente antes dele zerar e a borda da elipse aparece. -->
+                <Shape x="250" y="280" name="aura-nucleo" id="0:83">
+                    <Ellipse width="380" height="380" originX="0.5" originY="0.5" name="Path"/>
+                    <Fill name="Fill">
+                        <RadialGradient startX="0" startY="0" endX="0" endY="180" name="Gradiente">
+                            <GradientStop colorValue="4D9B6BE0" position="0" id="0:92"/>
+                            <GradientStop colorValue="009B6BE0" position="1" id="0:93"/>
+                        </RadialGradient>
+                    </Fill>
+                </Shape>
+
+                <Shape x="250" y="270" name="aura-halo" id="0:82">
+                    <Ellipse width="560" height="560" originX="0.5" originY="0.5" name="Path"/>
+                    <Fill name="Fill">
+                        <RadialGradient startX="0" startY="0" endX="0" endY="265" name="Gradiente">
+                            <GradientStop colorValue="3B9B6BE0" position="0" id="0:94"/>
+                            <GradientStop colorValue="1C9B6BE0" position="0.5" id="0:95"/>
+                            <GradientStop colorValue="009B6BE0" position="1" id="0:96"/>
+                        </RadialGradient>
+                    </Fill>
+                </Shape>
+            </Node>
+        </Node>
+
+        <StateMachine name="TaskyStateMachine" id="0:7">
+            <!-- O toque chega pelo gatilho "tap" do ViewModel, nao por
+                 listener: o widget usa RiveHitTestBehavior.none e e o
+                 GestureDetector do Flutter que decide a area tocavel. -->
+
+            <StateMachineLayer name="idle" id="0:8">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:30"/>
+                </EntryState>
+                <AnimationState x="220" y="20" animationId="0:70" id="0:30"/>
+            </StateMachineLayer>
+
+            <StateMachineLayer name="piscar" id="0:33">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:34"/>
+                </EntryState>
+                <AnimationState x="220" y="20" animationId="0:73" id="0:34"/>
+            </StateMachineLayer>
+
+            <!-- Uma camada por semblante, independente: liga o remendo quando
+                 o "mood" entra na faixa dele e desliga quando sai. As faixas
+                 nao se sobrepoem, entao no maximo uma esta ligada por vez --
+                 e por isso o estado "ligado" pode mexer tambem na postura sem
+                 brigar com as outras camadas. Os estados "desligado" mexem SO
+                 na opacidade, de proposito: se tambem zerassem a postura, a
+                 camada declarada por ultimo venceria e apagaria o ajuste da
+                 camada que esta ligada. -->
+            <StateMachineLayer name="semblante-muito-desanimado" id="0:35">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:36"/>
+                </EntryState>
+
+                <AnimationState x="220" y="20" animationId="0:74" id="0:36">
+                    <StateTransition stateToId="0:37" duration="0">
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="0.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+
+                <AnimationState x="420" y="20" animationId="0:75" id="0:37">
+                    <StateTransition stateToId="0:36" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="0.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+            </StateMachineLayer>
+
+            <StateMachineLayer name="semblante-desanimado" id="0:42">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:43"/>
+                </EntryState>
+
+                <!-- Faixa fechada: precisa das duas pontas, e as condicoes de
+                     uma transicao sao um E logico. -->
+                <AnimationState x="220" y="20" animationId="0:76" id="0:43">
+                    <StateTransition stateToId="0:44" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="0.5"/>
+                        </TransitionViewModelCondition>
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="1.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+
+                <!-- Sair da faixa e um OU (abaixo OU acima), e OU se escreve
+                     como duas transicoes separadas. -->
+                <AnimationState x="420" y="20" animationId="0:77" id="0:44">
+                    <StateTransition stateToId="0:43" duration="0">
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="0.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                    <StateTransition stateToId="0:43" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="1.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+            </StateMachineLayer>
+
+            <StateMachineLayer name="semblante-neutro" id="0:99">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:100"/>
+                </EntryState>
+
+                <AnimationState x="220" y="20" animationId="0:98" id="0:100">
+                    <StateTransition stateToId="0:101" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="1.5"/>
+                        </TransitionViewModelCondition>
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="2.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+
+                <AnimationState x="420" y="20" animationId="0:97" id="0:101">
+                    <StateTransition stateToId="0:100" duration="0">
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="1.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                    <StateTransition stateToId="0:100" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="2.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+            </StateMachineLayer>
+
+            <!-- Topo da escala: so a aura, sem faixa superior (mood maximo e 4). -->
+            <StateMachineLayer name="semblante-muito-alegre" id="0:88">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:89"/>
+                </EntryState>
+
+                <AnimationState x="220" y="20" animationId="0:86" id="0:89">
+                    <StateTransition stateToId="0:90" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="3.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+
+                <AnimationState x="420" y="20" animationId="0:87" id="0:90">
+                    <StateTransition stateToId="0:89" duration="0">
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="3.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+            </StateMachineLayer>
+
+            <StateMachineLayer name="semblante-alegre" id="0:56">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:57"/>
+                </EntryState>
+
+                <AnimationState x="220" y="20" animationId="0:78" id="0:57">
+                    <StateTransition stateToId="0:58" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="2.5"/>
+                        </TransitionViewModelCondition>
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="3.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+
+                <AnimationState x="420" y="20" animationId="0:79" id="0:58">
+                    <StateTransition stateToId="0:57" duration="0">
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="2.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                    <StateTransition stateToId="0:57" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:40-0:45" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="3.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+            </StateMachineLayer>
+
+            <StateMachineLayer name="reacao" id="0:9">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:31"/>
+                </EntryState>
+
+                <AnimationState x="220" y="20" animationId="0:72" id="0:31">
+                    <StateTransition stateToId="0:32" duration="0">
+                        <TransitionViewModelCondition>
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyTrigger>
+                                    <DataBindContext sourcePathIds="0:40-0:46" propertyKey="686"/>
+                                </BindablePropertyTrigger>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueTriggerComparator/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+
+                <AnimationState x="420" y="20" animationId="0:71" id="0:32">
+                    <StateTransition stateToId="0:31" duration="90"
+                                     enableExitTime="true" exitTimeIsPercetange="true"
+                                     exitTime="100"/>
+                </AnimationState>
+            </StateMachineLayer>
+        </StateMachine>
+
+        <!-- Respiracao, balanco da cauda e microbalanco da cabeca. 3s em loop. -->
+        <LinearAnimation loopValue="loop" duration="180" name="Respirar" id="0:70">
+            <KeyedObject objectId="0:16">
+                <KeyedProperty property="scaleY">
+                    <KeyFrameDouble value="1" interpolationType="cubic"/>
+                    <KeyFrameDouble value="1.016" interpolationType="cubic" frame="90"/>
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+                <KeyedProperty property="scaleX">
+                    <KeyFrameDouble value="1" interpolationType="cubic"/>
+                    <KeyFrameDouble value="0.993" interpolationType="cubic" frame="90"/>
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+                <KeyedProperty property="y">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="-3" interpolationType="cubic" frame="90"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:14">
+                <KeyedProperty property="y">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="-2.5" interpolationType="cubic" frame="90"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="0.011" interpolationType="cubic" frame="60"/>
+                    <KeyFrameDouble value="-0.009" interpolationType="cubic" frame="125"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:20">
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="-0.13" interpolationType="cubic" frame="45"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="90"/>
+                    <KeyFrameDouble value="0.09" interpolationType="cubic" frame="135"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <!-- Pulso da aura. Vai junto da respiracao em vez de ganhar
+                 camada propria: so o "aura-pulso" e tocado aqui, e ele nao
+                 disputa nada com ninguem. Fora de fase com o peito, para a
+                 energia nao parecer presa ao folego. -->
+            <KeyedObject objectId="0:84">
+                <KeyedProperty property="scaleX">
+                    <KeyFrameDouble value="0.97" interpolationType="cubic"/>
+                    <KeyFrameDouble value="1.05" interpolationType="cubic" frame="70"/>
+                    <KeyFrameDouble value="0.99" interpolationType="cubic" frame="130"/>
+                    <KeyFrameDouble value="0.97" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+                <KeyedProperty property="scaleY">
+                    <KeyFrameDouble value="0.97" interpolationType="cubic"/>
+                    <KeyFrameDouble value="1.05" interpolationType="cubic" frame="70"/>
+                    <KeyFrameDouble value="0.99" interpolationType="cubic" frame="130"/>
+                    <KeyFrameDouble value="0.97" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0.72" interpolationType="cubic"/>
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="70"/>
+                    <KeyFrameDouble value="0.82" interpolationType="cubic" frame="130"/>
+                    <KeyFrameDouble value="0.72" interpolationType="cubic" frame="180"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <!-- Piscada. 5s em loop, fora do compasso da respiracao, com duas
+             piscadas em tempos diferentes para nao soar mecanico. -->
+        <LinearAnimation loopValue="loop" duration="300" name="Piscar" id="0:73">
+            <KeyedObject objectId="0:24">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="40"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="46"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="208"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="213"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:25">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="40"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="46"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="208"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="213"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <!-- Reacao ao toque: agacha, pula, estica no ar e amortece na
+             aterrissagem. A cauda da um tranco no impulso. 0,67s. -->
+        <LinearAnimation duration="40" name="Reagir" id="0:71">
+            <KeyedObject objectId="0:23">
+                <KeyedProperty property="y">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="3" interpolationType="cubic" frame="6"/>
+                    <KeyFrameDouble value="-26" interpolationType="cubic" frame="15"/>
+                    <KeyFrameDouble value="-29" interpolationType="cubic" frame="21"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="28"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="40"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:11">
+                <KeyedProperty property="scaleY">
+                    <KeyFrameDouble value="1" interpolationType="cubic"/>
+                    <KeyFrameDouble value="0.90" interpolationType="cubic" frame="6"/>
+                    <KeyFrameDouble value="1.09" interpolationType="cubic" frame="15"/>
+                    <KeyFrameDouble value="1.04" interpolationType="cubic" frame="21"/>
+                    <KeyFrameDouble value="0.91" interpolationType="cubic" frame="28"/>
+                    <KeyFrameDouble value="1.03" interpolationType="cubic" frame="34"/>
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="40"/>
+                </KeyedProperty>
+                <KeyedProperty property="scaleX">
+                    <KeyFrameDouble value="1" interpolationType="cubic"/>
+                    <KeyFrameDouble value="1.08" interpolationType="cubic" frame="6"/>
+                    <KeyFrameDouble value="0.94" interpolationType="cubic" frame="15"/>
+                    <KeyFrameDouble value="0.97" interpolationType="cubic" frame="21"/>
+                    <KeyFrameDouble value="1.09" interpolationType="cubic" frame="28"/>
+                    <KeyFrameDouble value="0.98" interpolationType="cubic" frame="34"/>
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="40"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:19">
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="0" interpolationType="cubic"/>
+                    <KeyFrameDouble value="-0.42" interpolationType="cubic" frame="10"/>
+                    <KeyFrameDouble value="0.18" interpolationType="cubic" frame="22"/>
+                    <KeyFrameDouble value="-0.06" interpolationType="cubic" frame="31"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="40"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <!-- Interruptores dos semblantes. Um quadro so.
+             "Nao" mexe so na opacidade; "Sim" tambem ajusta a postura. -->
+        <LinearAnimation duration="1" name="MuitoDesanimadoNao" id="0:74">
+            <KeyedObject objectId="0:26">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <LinearAnimation duration="1" name="MuitoDesanimadoSim" id="0:75">
+            <KeyedObject objectId="0:26">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="1" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <!-- Postura encurvada. Num retrato de frente nao da para dobrar a
+                 coluna para a frente, entao o encurvamento vem de tres sinais
+                 que aparecem de frente: o conjunto afunda, o tronco comprime e
+                 FECHA os ombros, e a cabeca despenca para dentro deles,
+                 sumindo com o pescoco. -->
+            <KeyedObject objectId="0:28">
+                <KeyedProperty property="y">
+                    <KeyFrameDouble value="20" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:39">
+                <KeyedProperty property="scaleY">
+                    <KeyFrameDouble value="0.88" interpolationType="hold"/>
+                </KeyedProperty>
+                <KeyedProperty property="scaleX">
+                    <KeyFrameDouble value="0.96" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:29">
+                <KeyedProperty property="y">
+                    <KeyFrameDouble value="50" interpolationType="hold"/>
+                </KeyedProperty>
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="0.03" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <!-- Tronco envergado: gira pelo quadril, com as pernas plantadas.
+                 NEGATIVO leva o peito para a ESQUERDA de quem olha, que e o
+                 lado pedido. Verificado por teste: +0,25 jogava o peito para
+                 a direita, o oposto. -->
+            <KeyedObject objectId="0:59">
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="-0.30" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <!-- Rabo bem mais baixo e recolhido. -->
+            <KeyedObject objectId="0:47">
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="0.32" interpolationType="hold"/>
+                </KeyedProperty>
+                <KeyedProperty property="scaleX">
+                    <KeyFrameDouble value="0.70" interpolationType="hold"/>
+                </KeyedProperty>
+                <KeyedProperty property="scaleY">
+                    <KeyFrameDouble value="0.70" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <!-- Aura vermelha (TaskyColors.vermelho). -->
+            <KeyedObject objectId="0:92">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="4DE83834" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:93">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="00E83834" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:94">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="3BE83834" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:95">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="1CE83834" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:96">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="00E83834" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <!-- Todos os humores tem aura agora, entao ela fica sempre visivel e
+             o que muda e a COR. Nenhum estado "Nao" toca a aura: como as
+             faixas cobrem toda a escala, sempre ha exatamente um "Sim"
+             ligado, e um "Nao" declarado depois dele apagaria o trabalho
+             dele. Por isso este aqui esta vazio de proposito. -->
+        <LinearAnimation duration="1" name="MuitoAlegreNao" id="0:86"/>
+
+        <!-- O mood 2 nao tem remendo de rosto (e a arte base), mas agora tem
+             aura, entao ganhou camada so para colori-la. -->
+        <LinearAnimation duration="1" name="NeutroNao" id="0:98"/>
+
+        <LinearAnimation duration="1" name="NeutroSim" id="0:97">
+            <!-- Aura amarela (TaskyColors.amarelo). -->
+            <KeyedObject objectId="0:92">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="4DFFCC00" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:93">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="00FFCC00" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:94">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="3BFFCC00" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:95">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="1CFFCC00" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:96">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="00FFCC00" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <LinearAnimation duration="1" name="MuitoAlegreSim" id="0:87">
+            <!-- Rabo maior ainda que o do mood 3 (1,42) e mais alto: e o topo
+                 da escala. Mesmo no que todos os outros humores usam. -->
+            <KeyedObject objectId="0:47">
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="-0.14" interpolationType="hold"/>
+                </KeyedProperty>
+                <KeyedProperty property="scaleX">
+                    <KeyFrameDouble value="1.70" interpolationType="hold"/>
+                </KeyedProperty>
+                <KeyedProperty property="scaleY">
+                    <KeyFrameDouble value="1.70" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:92">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="4D9B6BE0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:93">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="009B6BE0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:94">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="3B9B6BE0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:95">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="1C9B6BE0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:96">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="009B6BE0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <LinearAnimation duration="1" name="AlegreNao" id="0:78">
+            <KeyedObject objectId="0:55">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <LinearAnimation duration="1" name="AlegreSim" id="0:79">
+            <KeyedObject objectId="0:55">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="1" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <!-- Rabo maior que o normal e um pouco mais alto. Mesmo no que os
+                 humores baixos encolhem: as faixas nao se sobrepoem. -->
+            <KeyedObject objectId="0:47">
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="-0.06" interpolationType="hold"/>
+                </KeyedProperty>
+                <KeyedProperty property="scaleX">
+                    <KeyFrameDouble value="1.42" interpolationType="hold"/>
+                </KeyedProperty>
+                <KeyedProperty property="scaleY">
+                    <KeyFrameDouble value="1.42" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <!-- Aura verde (TaskyColors.verde). -->
+            <KeyedObject objectId="0:92">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="4D76C42B" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:93">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="0076C42B" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:94">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="3B76C42B" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:95">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="1C76C42B" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:96">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="0076C42B" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <LinearAnimation duration="1" name="DesanimadoNao" id="0:76">
+            <KeyedObject objectId="0:38">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <LinearAnimation duration="1" name="DesanimadoSim" id="0:77">
+            <KeyedObject objectId="0:38">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="1" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <!-- Rabo um pouco recolhido, menos que no mood 0. Mexer no mesmo
+                 no que o mood 0 usa e seguro: as faixas nao se sobrepoem. -->
+            <KeyedObject objectId="0:47">
+                <KeyedProperty property="rotation">
+                    <KeyFrameDouble value="0.12" interpolationType="hold"/>
+                </KeyedProperty>
+                <KeyedProperty property="scaleX">
+                    <KeyFrameDouble value="0.85" interpolationType="hold"/>
+                </KeyedProperty>
+                <KeyedProperty property="scaleY">
+                    <KeyFrameDouble value="0.85" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <!-- Aura laranja (TaskyColors.laranja). -->
+            <KeyedObject objectId="0:92">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="4DF39A16" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:93">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="00F39A16" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:94">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="3BF39A16" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:95">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="1CF39A16" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+            <KeyedObject objectId="0:96">
+                <KeyedProperty property="colorValue">
+                    <KeyFrameColor value="00F39A16" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+
+        <!-- Estado de repouso da camada "reacao": nao mexe em nada. -->
+        <LinearAnimation duration="1" name="Parado" id="0:72"/>
+    </Artboard>
+
+    <ImageAsset file="cabeca.png" name="cabeca" id="0:60"/>
+    <!-- O antigo corpo.png continua na pasta, mas nao e mais declarado:
+         foi substituido por tronco.png + pernas.png. Arquivo nao declarado
+         nao entra no .riv. -->
+    <ImageAsset file="tronco.png" name="tronco" id="0:61"/>
+    <ImageAsset file="pernas.png" name="pernas" id="0:80"/>
+    <ImageAsset file="cauda.png" name="cauda" id="0:62"/>
+    <ImageAsset file="olho_dir.png" name="olho_dir" id="0:63"/>
+    <ImageAsset file="olho_esq.png" name="olho_esq" id="0:64"/>
+    <ImageAsset file="rosto_muito_desanimado.png" name="rosto_muito_desanimado" id="0:65"/>
+    <ImageAsset file="rosto_desanimado.png" name="rosto_desanimado" id="0:66"/>
+    <ImageAsset file="rosto_alegre.png" name="rosto_alegre" id="0:68"/>
+
+    <!-- Rampa de postura comum a todos os humores. O extra do mood 0 vem da
+         camada dele, nao daqui. -->
+    <DataConverterRangeMapper minInput="0" maxInput="4" minOutput="14" maxOutput="0"
+                              clampLower="true" clampUpper="true"
+                              name="moodParaCurvatura" id="0:50"/>
+    <DataConverterRangeMapper minInput="0" maxInput="4" minOutput="0.09" maxOutput="-0.03"
+                              clampLower="true" clampUpper="true"
+                              name="moodParaCabeca" id="0:51"/>
+    <DataConverterRangeMapper minInput="0" maxInput="4" minOutput="0.3" maxOutput="-0.24"
+                              clampLower="true" clampUpper="true"
+                              name="moodParaCauda" id="0:52"/>
+
+    <ViewModel defaultInstanceId="0:41" name="Tasky" id="0:40">
+        <ViewModelPropertyNumber name="mood" id="0:45"/>
+        <ViewModelPropertyTrigger name="tap" id="0:46"/>
+        <ViewModelInstance exports="true" name="Default" id="0:41">
+            <ViewModelInstanceNumber propertyValue="2" viewModelPropertyId="0:45"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="0:46"/>
+        </ViewModelInstance>
+    </ViewModel>
+</Rive>

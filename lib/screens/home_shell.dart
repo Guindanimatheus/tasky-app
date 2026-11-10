@@ -47,7 +47,11 @@ class _HomeShellState extends State<HomeShell> {
       // IndexedStack mantém o estado (ex.: rolagem) de cada aba.
       body: IndexedStack(
         index: _aba,
-        children: const [InicioScreen(), TrilhasScreen(), TarefasScreen()],
+        children: [
+          InicioScreen(visivel: _aba == 0),
+          const TrilhasScreen(),
+          const TarefasScreen(),
+        ],
       ),
       bottomNavigationBar: NavigationBar(
         selectedIndex: _aba,

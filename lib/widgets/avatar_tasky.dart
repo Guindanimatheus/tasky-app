@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/estado_avatar.dart';
 import '../theme/tasky_theme.dart';
-import 'tasky_avatar_scene.dart';
+import 'cenario_tasky.dart';
 
 /// Cor temática de cada estado (documentação, seção 6).
 Color corDoEstado(EstadoAvatar e) => switch (e) {
@@ -14,9 +14,8 @@ Color corDoEstado(EstadoAvatar e) => switch (e) {
 };
 
 /// Cartão de status do avatar Tasky, no formato das telas 03–07 do Figma:
-/// cabeçalho com nome, palavras-chave e sinal de nível; cena animada
-/// ([TaskyAvatarScene]); citação; e barra de progresso até o próximo
-/// estado.
+/// cabeçalho com nome, palavras-chave e sinal de nível; o diorama
+/// ([CenarioTasky]); citação; e barra de progresso até o próximo estado.
 ///
 /// A cena fica fixa na árvore: quando o XP muda de faixa, só o `mood`
 /// dela é atualizado e os textos trocam com uma transição.
@@ -24,46 +23,54 @@ class AvatarTasky extends StatelessWidget {
   const AvatarTasky({
     super.key,
     required this.xp,
-    this.tamanho = 200,
+    this.visivel = true,
     this.mostrarTexto = true,
   });
 
   final int xp;
 
-  /// Lado da área do mascote.
-  final double tamanho;
+  /// Se a aba do avatar é a que está em primeiro plano. Repassado ao
+  /// [CenarioTasky] para decidir entre trocar o quarto com cross-fade
+  /// ou já entrar atualizado.
+  final bool visivel;
 
   /// Exibe cabeçalho, citação e barra de progresso.
   final bool mostrarTexto;
+
+  /// Teto de largura do diorama, em pixels lógicos.
+  static const larguraMaximaDiorama = 420.0;
 
   @override
   Widget build(BuildContext context) {
     final estado = EstadoAvatar.paraXp(xp);
     final cor = corDoEstado(estado);
-    final s = tamanho;
 
-    final moldura = AnimatedContainer(
-      duration: const Duration(milliseconds: 400),
-      width: double.infinity,
-      padding: EdgeInsets.only(top: s * 0.2, bottom: 8),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: cor, width: 2),
-        boxShadow: [
-          BoxShadow(color: cor.withValues(alpha: 0.35), blurRadius: 14),
-        ],
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [cor.withValues(alpha: 0.28), TaskyColors.fundo],
+    // O diorama é 3:2 deitado: em largura cheia num tablet ou numa
+    // janela larga ele viraria um painel gigante e empurraria a citação
+    // e a barra para fora da tela. 420 mantém a proporção de celular.
+    final moldura = Center(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 400),
+        width: double.infinity,
+        constraints: const BoxConstraints(maxWidth: larguraMaximaDiorama),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: cor, width: 2),
+          boxShadow: [
+            BoxShadow(color: cor.withValues(alpha: 0.35), blurRadius: 14),
+          ],
         ),
-      ),
-      child: Center(
-        child: Semantics(
-          button: true,
-          label: 'Avatar Tasky. Estado ${estado.numero} de 5: ${estado.nome}.',
-          hint: 'Toque para ver uma reação.',
-          child: TaskyAvatarScene(mood: estado.index, tamanho: s),
+        // 12 = os 14 do contêiner menos a borda de 2, senão a imagem
+        // vaza por baixo do canto arredondado.
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(12),
+          child: Semantics(
+            button: true,
+            label:
+                'Avatar Tasky. Estado ${estado.numero} de 5: ${estado.nome}.',
+            hint: 'Toque para ver uma reação.',
+            child: CenarioTasky(mood: estado.index, visivel: visivel),
+          ),
         ),
       ),
     );

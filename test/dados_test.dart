@@ -42,7 +42,7 @@ void main() {
 
     // Trilha difícil: perde 100% do que a tarefa daria.
     await c.selecionarTrilha(
-      trilhaPorId('foco-total')!,
+      trilhaPorId('disciplina-na-pratica')!,
       adicionarTarefas: false,
     );
     await c.adicionarTarefa(titulo: 'Hard', data: antiga, xp: 15);

@@ -29,7 +29,7 @@ void main() {
 
     await tester.tap(find.text('Trilhas').last);
     await tester.pumpAndSettle();
-    expect(find.text('Recomeço leve'), findsOneWidget);
+    expect(find.text('O Primeiro Passo'), findsOneWidget);
 
     await tester.tap(find.text('Tarefas').last);
     await tester.pumpAndSettle();

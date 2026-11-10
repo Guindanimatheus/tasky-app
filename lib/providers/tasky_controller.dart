@@ -194,6 +194,14 @@ class TaskyController extends ChangeNotifier {
     await _salvarTarefas();
   }
 
+  /// TEMPORÁRIO — usado só pelo PainelTeste, para percorrer os cinco
+  /// moods sem ter que concluir tarefas. Sai junto com o painel.
+  Future<void> definirXpParaTeste(int xp) async {
+    _progresso = Progresso(xp: xp.clamp(0, RegrasXp.xpMaximo));
+    notifyListeners();
+    await _armazenamento.salvarProgresso(_progresso);
+  }
+
   void dispensarAvisoAtraso() {
     perdaPorAtraso = 0;
     notifyListeners();

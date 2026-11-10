@@ -6,9 +6,15 @@ import '../models/regras_xp.dart';
 import '../providers/tasky_controller.dart';
 import '../widgets/avatar_tasky.dart';
 import '../widgets/estado_vazio.dart';
+import '../widgets/painel_teste.dart';
 
 class InicioScreen extends StatelessWidget {
-  const InicioScreen({super.key});
+  const InicioScreen({super.key, this.visivel = true});
+
+  /// Se esta é a aba em primeiro plano. O [IndexedStack] do HomeShell
+  /// mantém as três abas montadas, então sem este sinal o diorama
+  /// animaria a troca de quarto fora da vista.
+  final bool visivel;
 
   @override
   Widget build(BuildContext context) {
@@ -31,6 +37,8 @@ class InicioScreen extends StatelessWidget {
         final proximo = EstadoAvatar.paraXp(xp).proximo;
         return ConteudoAba(
           children: [
+            // TEMPORÁRIO: ver painel_teste.dart.
+            if (modoTeste) ...[const PainelTeste(), const SizedBox(height: 16)],
             if (controller.perdaPorAtraso > 0) ...[
               Card(
                 child: ListTile(
@@ -54,7 +62,7 @@ class InicioScreen extends StatelessWidget {
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
-                child: AvatarTasky(xp: xp),
+                child: AvatarTasky(xp: xp, visivel: visivel),
               ),
             ),
             const SizedBox(height: 16),
