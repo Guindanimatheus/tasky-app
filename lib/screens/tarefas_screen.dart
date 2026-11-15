@@ -4,6 +4,7 @@ import '../models/regras_xp.dart';
 import '../models/tarefa.dart';
 import '../providers/tasky_controller.dart';
 import '../theme/tasky_theme.dart';
+import '../widgets/dialogos.dart';
 import '../widgets/estado_vazio.dart';
 import '../widgets/formulario_tarefa.dart';
 
@@ -185,6 +186,17 @@ class _ItemTarefa extends StatelessWidget {
   Future<void> _alternar(BuildContext context) async {
     final controller = TaskyScope.of(context);
     final mensageiro = ScaffoldMessenger.of(context);
+    // Só concluir pede confirmação: é o que dá XP e mexe no humor do
+    // Tasky. Reabrir não tira nada, então segue direto.
+    if (!tarefa.concluida) {
+      final ok = await confirmar(
+        context,
+        titulo: 'Deseja finalizar essa tarefa?',
+        mensagem: '"${tarefa.titulo}" vale +${tarefa.xp} XP.',
+        rotuloConfirmar: 'Finalizar',
+      );
+      if (!ok) return;
+    }
     final bonus = await controller.alternarConclusao(tarefa.id);
     if (bonus > 0) {
       mensageiro.showSnackBar(

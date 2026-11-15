@@ -32,7 +32,7 @@ class TaskyAvatarScene extends StatefulWidget {
     this.imagemParada,
   });
 
-  static const arquivoPadrao = 'assets/mascote/tasky_scene.riv';
+  static const arquivoPadrao = 'assets/mascote/tasky_v2.riv';
   static const maquinaDeEstados = 'TaskyStateMachine';
   static const propriedadeMood = 'mood';
   static const gatilhoTap = 'tap';

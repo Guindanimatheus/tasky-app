@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/models/estado_avatar.dart';
-import 'package:flutter_application_1/widgets/avatar_tasky.dart';
-import 'package:flutter_application_1/widgets/cenario_tasky.dart';
-import 'package:flutter_application_1/widgets/tasky_avatar_scene.dart';
+import 'package:tasky/models/estado_avatar.dart';
+import 'package:tasky/widgets/avatar_tasky.dart';
+import 'package:tasky/widgets/cenario_tasky.dart';
+import 'package:tasky/widgets/tasky_avatar_scene.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -1,9 +1,9 @@
-import 'package:flutter_application_1/data/trilhas_padrao.dart';
-import 'package:flutter_application_1/models/regras_xp.dart';
-import 'package:flutter_application_1/models/tarefa.dart';
-import 'package:flutter_application_1/models/trilha.dart';
-import 'package:flutter_application_1/providers/tasky_controller.dart';
-import 'package:flutter_application_1/services/armazenamento.dart';
+import 'package:tasky/data/trilhas_padrao.dart';
+import 'package:tasky/models/regras_xp.dart';
+import 'package:tasky/models/tarefa.dart';
+import 'package:tasky/models/trilha.dart';
+import 'package:tasky/providers/tasky_controller.dart';
+import 'package:tasky/services/armazenamento.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_application_1/main.dart';
-import 'package:flutter_application_1/providers/tasky_controller.dart';
-import 'package:flutter_application_1/services/armazenamento.dart';
-import 'package:flutter_application_1/services/conta_local.dart';
+import 'package:tasky/main.dart';
+import 'package:tasky/providers/tasky_controller.dart';
+import 'package:tasky/services/armazenamento.dart';
+import 'package:tasky/services/conta_local.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<TaskyApp> _app({bool logado = true, bool splash = false}) async {
@@ -102,6 +102,44 @@ void main() {
     acao.onPressed();
     await tester.pumpAndSettle();
     expect(find.text('Ler'), findsOneWidget);
+  });
+
+  testWidgets('concluir pede confirmação; cancelar não conclui', (
+    tester,
+  ) async {
+    _semAnimacoesContinuas(tester);
+    final app = await _app();
+    await tester.pumpWidget(app);
+    await tester.tap(find.text('Tarefas').last);
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Nova tarefa'));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextFormField).first, 'Ler');
+    final botaoAdicionar = find.widgetWithText(FilledButton, 'Adicionar');
+    await tester.ensureVisible(botaoAdicionar);
+    await tester.tap(botaoAdicionar);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(Checkbox));
+    await tester.pumpAndSettle();
+    expect(find.text('Deseja finalizar essa tarefa?'), findsOneWidget);
+    await tester.tap(find.text('Cancelar'));
+    await tester.pumpAndSettle();
+    expect(app.controller.concluidas, isEmpty);
+    expect(app.controller.progresso.xp, 0);
+
+    await tester.tap(find.byType(Checkbox));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Finalizar'));
+    await tester.pumpAndSettle();
+    expect(app.controller.concluidas, hasLength(1));
+    expect(app.controller.progresso.xp, greaterThan(0));
+
+    // Reabrir não pede confirmação.
+    await tester.tap(find.byType(Checkbox));
+    await tester.pumpAndSettle();
+    expect(find.text('Deseja finalizar essa tarefa?'), findsNothing);
+    expect(app.controller.concluidas, isEmpty);
   });
 
   testWidgets('splash leva ao cadastro, que valida e entra no app', (

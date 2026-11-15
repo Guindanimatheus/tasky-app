@@ -27,23 +27,32 @@
       animacao dispute propriedade com outra nem com um data bind:
         reacao          <- Reagir: squash/stretch (pivo nos pes)
         pulo            <- Reagir: altura do pulinho
-        oprimido        <- reservado para as camadas de semblante
+        oprimido        <- reservado (queda extra do humor baixo)
         corpo-postura   <- posicao do quadril
         corpo-mood      <- bind: altura pelo mood
         tronco-curva    <- bind: inclinacao do tronco pelo mood
         cabeca-postura  <- bind: inclinacao da cabeca pelo mood
         cauda-postura   <- bind: angulo da cauda pelo mood
         *-idle          <- Respirar
+        rosto-N         <- camadas rosto-N: qual cabeca aparece
         olho-*-fechado  <- Piscar, so opacidade
 
       O mood vai de 0 (O Procrastinador) a 4 (Disciplinado), e e o
       `index` do enum EstadoAvatar, nao o `numero` que o app exibe --
       os dois estao deslocados em um.
 
-      NAO ESTA AQUI AINDA: um semblante por mood. A arte nova traz rosto
-      proprio em cada mood, mas as pecas recortadas sao so as do corpo
-      base (mood 2), entao hoje o humor aparece na POSTURA, nao na cara.
-      Ver "O QUE FALTA CRIAR", item 1, em arte/MOVIMENTOS.md.
+      Semblante por mood: a cabeca INTEIRA troca, nao um remendo de rosto.
+      As cinco artes (arte/avatares/moodN_*.png) usam a mesma moldura, mas
+      a cabeca de cada uma esta num angulo proprio -- caida no 0, inclinada
+      no 1, deslocada no 4 -- e um rosto colado na cabeca do mood 2 ficaria
+      torto. Cada cabeca fica na coordenada original dela e assenta no
+      pescoco do moletom do corpo base. Cinco camadas "rosto-N" ligam o
+      grupo do mood atual. So o mood 2 tem orelhas soltas: as orelhas sao
+      copias da cabeca dele e nao servem nas outras. O mood 4 ja esta de
+      olhos fechados (rindo), entao nao pisca.
+
+      O corpo continua o do mood 2: o moletom rasgado do mood 0 e o braco
+      erguido dos moods 3 e 4 nao estao aqui.
     -->
     <Artboard defaultStateMachineId="0:7" viewModelId="0:90" viewModelInstanceId="0:93"
               styleId="0:5" width="1024" height="1536" name="Tasky" id="0:2">
@@ -65,7 +74,7 @@
                             <!-- No proprio para o "mood" nao disputar o y
                                  da posicao do quadril. -->
                             <Node name="corpo-mood" id="0:15">
-                                <DataBindContext sourcePathIds="0:90-0:91" propertyKey="14" converterId="0:80"/>
+                                <DataBindContext sourcePathIds="0:90-0:91" propertyKey="14" converterId="0:80" id="0:94"/>
 
                                 <!-- Gira SO o tronco, pelo quadril: e o
                                      unico jeito de envergar o corpo
@@ -75,33 +84,70 @@
                                      leva o peito para a direita de quem
                                      olha. -->
                                 <Node name="tronco-curva" id="0:16">
-                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="15" converterId="0:81"/>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="15" converterId="0:81" id="0:95"/>
 
                                     <!-- Pescoco (484, 462). -->
                                     <Node x="-1" y="-364" name="cabeca-postura" id="0:17">
-                                        <DataBindContext sourcePathIds="0:90-0:91" propertyKey="15" converterId="0:82"/>
+                                        <DataBindContext sourcePathIds="0:90-0:91" propertyKey="15" converterId="0:82" id="0:96"/>
                                         <Node name="cabeca-oprimida" id="0:18">
                                             <Node name="cabeca-idle" id="0:19">
 
-                                                <!-- Olhos fechados: so aparecem na
-                                                     piscada, em corte seco. -->
-                                                <Image assetId="0:69" originX="0" originY="0"
-                                                       x="-119" y="-179" opacity="0"
-                                                       name="olho-esq-fechado" id="0:20"/>
+                                                <!-- Um grupo por mood; as camadas "rosto-N" ligam so o do
+                                                     mood atual. -->
+                                                <Node name="rosto-0" opacity="0" id="0:300">
+                                                    <Image assetId="0:324" originX="0" originY="0"
+                                                           x="-135" y="-106" opacity="0" name="olho-esq-fechado-0" id="0:310"/>
+                                                    <Image assetId="0:325" originX="0" originY="0"
+                                                           x="-33" y="-182" opacity="0" name="olho-dir-fechado-0" id="0:311"/>
+                                                    <Image assetId="0:320" originX="0" originY="0"
+                                                           x="-276" y="-449" name="cabeca-0" id="0:312"/>
+                                                </Node>
 
-                                                <Image assetId="0:70" originX="0" originY="0"
-                                                       x="0" y="-227" opacity="0"
-                                                       name="olho-dir-fechado" id="0:21"/>
+                                                <Node name="rosto-1" opacity="0" id="0:301">
+                                                    <Image assetId="0:326" originX="0" originY="0"
+                                                           x="-134" y="-147" opacity="0" name="olho-esq-fechado-1" id="0:313"/>
+                                                    <Image assetId="0:327" originX="0" originY="0"
+                                                           x="-21" y="-210" opacity="0" name="olho-dir-fechado-1" id="0:314"/>
+                                                    <Image assetId="0:321" originX="0" originY="0"
+                                                           x="-260" y="-455" name="cabeca-1" id="0:315"/>
+                                                </Node>
 
-                                                <!-- Pivo na base de cada orelha. -->
-                                                <Image assetId="0:64" originX="0.23899" originY="0.98235"
-                                                       x="-159" y="-202" name="orelha-esq" id="0:22"/>
+                                                <!-- Mood 2: a cabeca base, com orelhas soltas. -->
+                                                <Node name="rosto-2" opacity="1" id="0:302">
+                                                    <!-- Olhos fechados: so aparecem na
+                                                         piscada, em corte seco. -->
+                                                    <Image assetId="0:69" originX="0" originY="0"
+                                                           x="-119" y="-179" opacity="0"
+                                                           name="olho-esq-fechado" id="0:20"/>
 
-                                                <Image assetId="0:65" originX="0.29565" originY="0.96838"
-                                                       x="46" y="-209" name="orelha-dir" id="0:23"/>
+                                                    <Image assetId="0:70" originX="0" originY="0"
+                                                           x="0" y="-227" opacity="0"
+                                                           name="olho-dir-fechado" id="0:21"/>
 
-                                                <Image assetId="0:60" originX="0.48642" originY="0.98910"
-                                                       name="cabeca" id="0:24"/>
+                                                    <!-- Pivo na base de cada orelha. -->
+                                                    <Image assetId="0:64" originX="0.23899" originY="0.98235"
+                                                           x="-159" y="-202" name="orelha-esq" id="0:22"/>
+
+                                                    <Image assetId="0:65" originX="0.29565" originY="0.96838"
+                                                           x="46" y="-209" name="orelha-dir" id="0:23"/>
+
+                                                    <Image assetId="0:60" originX="0.48642" originY="0.98910"
+                                                           name="cabeca" id="0:24"/>
+                                                </Node>
+
+                                                <Node name="rosto-3" opacity="0" id="0:303">
+                                                    <Image assetId="0:328" originX="0" originY="0"
+                                                           x="-119" y="-201" opacity="0" name="olho-esq-fechado-3" id="0:316"/>
+                                                    <Image assetId="0:329" originX="0" originY="0"
+                                                           x="-1" y="-247" opacity="0" name="olho-dir-fechado-3" id="0:317"/>
+                                                    <Image assetId="0:322" originX="0" originY="0"
+                                                           x="-200" y="-459" name="cabeca-3" id="0:318"/>
+                                                </Node>
+
+                                                <Node name="rosto-4" opacity="0" id="0:304">
+                                                    <Image assetId="0:323" originX="0" originY="0"
+                                                           x="-115" y="-386" name="cabeca-4" id="0:319"/>
+                                                </Node>
                                             </Node>
                                         </Node>
                                     </Node>
@@ -136,7 +182,7 @@
                                 <!-- Raiz da cauda (634, 883), escondida atras
                                      do quadril. -->
                                 <Node x="149" y="57" name="cauda-postura" id="0:32">
-                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="15" converterId="0:83"/>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="15" converterId="0:83" id="0:97"/>
                                     <Node name="cauda-oprimida" id="0:33">
                                         <Node name="cauda-reacao" id="0:34">
                                             <Node name="cauda-base" id="0:35">
@@ -173,39 +219,39 @@
                  GestureDetector do Flutter que decide a area tocavel. -->
 
             <StateMachineLayer name="idle" id="0:40">
-                <AnyState x="220" y="-120"/>
-                <ExitState x="420" y="-120"/>
-                <EntryState x="20" y="20">
-                    <StateTransition stateToId="0:41"/>
+                <AnyState x="220" y="-120" id="0:98"/>
+                <ExitState x="420" y="-120" id="0:99"/>
+                <EntryState x="20" y="20" id="0:100">
+                    <StateTransition stateToId="0:41" id="0:101"/>
                 </EntryState>
                 <AnimationState x="220" y="20" animationId="0:50" id="0:41"/>
             </StateMachineLayer>
 
             <StateMachineLayer name="piscar" id="0:42">
-                <AnyState x="220" y="-120"/>
-                <ExitState x="420" y="-120"/>
-                <EntryState x="20" y="20">
-                    <StateTransition stateToId="0:43"/>
+                <AnyState x="220" y="-120" id="0:102"/>
+                <ExitState x="420" y="-120" id="0:103"/>
+                <EntryState x="20" y="20" id="0:104">
+                    <StateTransition stateToId="0:43" id="0:105"/>
                 </EntryState>
                 <AnimationState x="220" y="20" animationId="0:51" id="0:43"/>
             </StateMachineLayer>
 
             <StateMachineLayer name="reacao" id="0:44">
-                <AnyState x="220" y="-120"/>
-                <ExitState x="420" y="-120"/>
-                <EntryState x="20" y="20">
-                    <StateTransition stateToId="0:45"/>
+                <AnyState x="220" y="-120" id="0:106"/>
+                <ExitState x="420" y="-120" id="0:107"/>
+                <EntryState x="20" y="20" id="0:108">
+                    <StateTransition stateToId="0:45" id="0:109"/>
                 </EntryState>
 
                 <AnimationState x="220" y="20" animationId="0:53" id="0:45">
-                    <StateTransition stateToId="0:46" duration="0">
-                        <TransitionViewModelCondition>
-                            <TransitionPropertyViewModelComparator>
-                                <BindablePropertyTrigger>
-                                    <DataBindContext sourcePathIds="0:90-0:92" propertyKey="686"/>
+                    <StateTransition stateToId="0:46" duration="0" id="0:110">
+                        <TransitionViewModelCondition id="0:111">
+                            <TransitionPropertyViewModelComparator id="0:112">
+                                <BindablePropertyTrigger id="0:113">
+                                    <DataBindContext sourcePathIds="0:90-0:92" propertyKey="686" id="0:114"/>
                                 </BindablePropertyTrigger>
                             </TransitionPropertyViewModelComparator>
-                            <TransitionValueTriggerComparator/>
+                            <TransitionValueTriggerComparator id="0:115"/>
                         </TransitionViewModelCondition>
                     </StateTransition>
                 </AnimationState>
@@ -213,7 +259,227 @@
                 <AnimationState x="420" y="20" animationId="0:52" id="0:46">
                     <StateTransition stateToId="0:45" duration="90"
                                      enableExitTime="true" exitTimeIsPercetange="true"
-                                     exitTime="100"/>
+                                     exitTime="100" id="0:116"/>
+                </AnimationState>
+            </StateMachineLayer>
+
+            <!-- Uma camada por rosto: liga o grupo quando o "mood" entra na
+                 faixa dele e desliga quando sai. As faixas nao se sobrepoem,
+                 entao exatamente um rosto aparece. Entrar na faixa e um E
+                 (uma transicao, duas condicoes); sair e um OU (duas
+                 transicoes). -->
+
+            <StateMachineLayer name="rosto-0" id="0:340">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:350"/>
+                </EntryState>
+                <AnimationState x="220" y="20" animationId="0:330" id="0:350">
+                    <StateTransition stateToId="0:351" duration="0">
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="0.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="420" y="20" animationId="0:331" id="0:351">
+                    <StateTransition stateToId="0:350" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="0.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+            </StateMachineLayer>
+
+            <StateMachineLayer name="rosto-1" id="0:341">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:352"/>
+                </EntryState>
+                <AnimationState x="220" y="20" animationId="0:332" id="0:352">
+                    <StateTransition stateToId="0:353" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="0.5"/>
+                        </TransitionViewModelCondition>
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="1.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="420" y="20" animationId="0:333" id="0:353">
+                    <StateTransition stateToId="0:352" duration="0">
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="0.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                    <StateTransition stateToId="0:352" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="1.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+            </StateMachineLayer>
+
+            <StateMachineLayer name="rosto-2" id="0:342">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:354"/>
+                </EntryState>
+                <AnimationState x="220" y="20" animationId="0:334" id="0:354">
+                    <StateTransition stateToId="0:355" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="1.5"/>
+                        </TransitionViewModelCondition>
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="2.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="420" y="20" animationId="0:335" id="0:355">
+                    <StateTransition stateToId="0:354" duration="0">
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="1.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                    <StateTransition stateToId="0:354" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="2.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+            </StateMachineLayer>
+
+            <StateMachineLayer name="rosto-3" id="0:343">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:356"/>
+                </EntryState>
+                <AnimationState x="220" y="20" animationId="0:336" id="0:356">
+                    <StateTransition stateToId="0:357" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="2.5"/>
+                        </TransitionViewModelCondition>
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="3.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="420" y="20" animationId="0:337" id="0:357">
+                    <StateTransition stateToId="0:356" duration="0">
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="2.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                    <StateTransition stateToId="0:356" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="3.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+            </StateMachineLayer>
+
+            <StateMachineLayer name="rosto-4" id="0:344">
+                <AnyState x="220" y="-120"/>
+                <ExitState x="420" y="-120"/>
+                <EntryState x="20" y="20">
+                    <StateTransition stateToId="0:358"/>
+                </EntryState>
+                <AnimationState x="220" y="20" animationId="0:338" id="0:358">
+                    <StateTransition stateToId="0:359" duration="0">
+                        <TransitionViewModelCondition opValue="greaterThanOrEqual">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="3.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
+                </AnimationState>
+                <AnimationState x="420" y="20" animationId="0:339" id="0:359">
+                    <StateTransition stateToId="0:358" duration="0">
+                        <TransitionViewModelCondition opValue="lessThan">
+                            <TransitionPropertyViewModelComparator>
+                                <BindablePropertyNumber>
+                                    <DataBindContext sourcePathIds="0:90-0:91" propertyKey="636"/>
+                                </BindablePropertyNumber>
+                            </TransitionPropertyViewModelComparator>
+                            <TransitionValueNumberComparator value="3.5"/>
+                        </TransitionViewModelCondition>
+                    </StateTransition>
                 </AnimationState>
             </StateMachineLayer>
         </StateMachine>
@@ -221,77 +487,77 @@
         <!-- Respiracao, microbalanco da cabeca, tremida das orelhas e
              balanco da cauda. 3s em loop. -->
         <LinearAnimation loopValue="loop" duration="180" name="Respirar" id="0:50">
-            <KeyedObject objectId="0:28">
-                <KeyedProperty property="scaleY">
-                    <KeyFrameDouble value="1" interpolationType="cubic"/>
-                    <KeyFrameDouble value="1.018" interpolationType="cubic" frame="90"/>
-                    <KeyFrameDouble value="1" interpolationType="cubic" frame="180"/>
+            <KeyedObject objectId="0:28" id="0:117">
+                <KeyedProperty property="scaleY" id="0:118">
+                    <KeyFrameDouble value="1" interpolationType="cubic" id="0:119"/>
+                    <KeyFrameDouble value="1.018" interpolationType="cubic" frame="90" id="0:120"/>
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="180" id="0:121"/>
                 </KeyedProperty>
-                <KeyedProperty property="scaleX">
-                    <KeyFrameDouble value="1" interpolationType="cubic"/>
-                    <KeyFrameDouble value="0.993" interpolationType="cubic" frame="90"/>
-                    <KeyFrameDouble value="1" interpolationType="cubic" frame="180"/>
+                <KeyedProperty property="scaleX" id="0:122">
+                    <KeyFrameDouble value="1" interpolationType="cubic" id="0:123"/>
+                    <KeyFrameDouble value="0.993" interpolationType="cubic" frame="90" id="0:124"/>
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="180" id="0:125"/>
                 </KeyedProperty>
-                <KeyedProperty property="y">
-                    <KeyFrameDouble value="0" interpolationType="cubic"/>
-                    <KeyFrameDouble value="-10" interpolationType="cubic" frame="90"/>
-                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+                <KeyedProperty property="y" id="0:126">
+                    <KeyFrameDouble value="0" interpolationType="cubic" id="0:127"/>
+                    <KeyFrameDouble value="-10" interpolationType="cubic" frame="90" id="0:128"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180" id="0:129"/>
                 </KeyedProperty>
             </KeyedObject>
 
-            <KeyedObject objectId="0:19">
-                <KeyedProperty property="y">
-                    <KeyFrameDouble value="0" interpolationType="cubic"/>
-                    <KeyFrameDouble value="-8" interpolationType="cubic" frame="90"/>
-                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+            <KeyedObject objectId="0:19" id="0:130">
+                <KeyedProperty property="y" id="0:131">
+                    <KeyFrameDouble value="0" interpolationType="cubic" id="0:132"/>
+                    <KeyFrameDouble value="-8" interpolationType="cubic" frame="90" id="0:133"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180" id="0:134"/>
                 </KeyedProperty>
-                <KeyedProperty property="rotation">
-                    <KeyFrameDouble value="0" interpolationType="cubic"/>
-                    <KeyFrameDouble value="0.011" interpolationType="cubic" frame="60"/>
-                    <KeyFrameDouble value="-0.009" interpolationType="cubic" frame="125"/>
-                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+                <KeyedProperty property="rotation" id="0:135">
+                    <KeyFrameDouble value="0" interpolationType="cubic" id="0:136"/>
+                    <KeyFrameDouble value="0.011" interpolationType="cubic" frame="60" id="0:137"/>
+                    <KeyFrameDouble value="-0.009" interpolationType="cubic" frame="125" id="0:138"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180" id="0:139"/>
                 </KeyedProperty>
             </KeyedObject>
 
             <!-- Orelhas fora de compasso uma com a outra, senao viram
                  antena de carro. -->
-            <KeyedObject objectId="0:22">
-                <KeyedProperty property="rotation">
-                    <KeyFrameDouble value="0" interpolationType="cubic"/>
-                    <KeyFrameDouble value="-0.035" interpolationType="cubic" frame="50"/>
-                    <KeyFrameDouble value="0.02" interpolationType="cubic" frame="120"/>
-                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+            <KeyedObject objectId="0:22" id="0:140">
+                <KeyedProperty property="rotation" id="0:141">
+                    <KeyFrameDouble value="0" interpolationType="cubic" id="0:142"/>
+                    <KeyFrameDouble value="-0.035" interpolationType="cubic" frame="50" id="0:143"/>
+                    <KeyFrameDouble value="0.02" interpolationType="cubic" frame="120" id="0:144"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180" id="0:145"/>
                 </KeyedProperty>
             </KeyedObject>
 
-            <KeyedObject objectId="0:23">
-                <KeyedProperty property="rotation">
-                    <KeyFrameDouble value="0" interpolationType="cubic"/>
-                    <KeyFrameDouble value="0.03" interpolationType="cubic" frame="62"/>
-                    <KeyFrameDouble value="-0.022" interpolationType="cubic" frame="130"/>
-                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+            <KeyedObject objectId="0:23" id="0:146">
+                <KeyedProperty property="rotation" id="0:147">
+                    <KeyFrameDouble value="0" interpolationType="cubic" id="0:148"/>
+                    <KeyFrameDouble value="0.03" interpolationType="cubic" frame="62" id="0:149"/>
+                    <KeyFrameDouble value="-0.022" interpolationType="cubic" frame="130" id="0:150"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180" id="0:151"/>
                 </KeyedProperty>
             </KeyedObject>
 
-            <KeyedObject objectId="0:35">
-                <KeyedProperty property="rotation">
-                    <KeyFrameDouble value="0" interpolationType="cubic"/>
-                    <KeyFrameDouble value="-0.13" interpolationType="cubic" frame="45"/>
-                    <KeyFrameDouble value="0" interpolationType="cubic" frame="90"/>
-                    <KeyFrameDouble value="0.09" interpolationType="cubic" frame="135"/>
-                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+            <KeyedObject objectId="0:35" id="0:152">
+                <KeyedProperty property="rotation" id="0:153">
+                    <KeyFrameDouble value="0" interpolationType="cubic" id="0:154"/>
+                    <KeyFrameDouble value="-0.13" interpolationType="cubic" frame="45" id="0:155"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="90" id="0:156"/>
+                    <KeyFrameDouble value="0.09" interpolationType="cubic" frame="135" id="0:157"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180" id="0:158"/>
                 </KeyedProperty>
             </KeyedObject>
 
             <!-- A ponta atrasa 15 quadros em relacao a base: e isso que da
                  o chicote. -->
-            <KeyedObject objectId="0:36">
-                <KeyedProperty property="rotation">
-                    <KeyFrameDouble value="0" interpolationType="cubic"/>
-                    <KeyFrameDouble value="-0.10" interpolationType="cubic" frame="60"/>
-                    <KeyFrameDouble value="0" interpolationType="cubic" frame="105"/>
-                    <KeyFrameDouble value="0.07" interpolationType="cubic" frame="150"/>
-                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180"/>
+            <KeyedObject objectId="0:36" id="0:159">
+                <KeyedProperty property="rotation" id="0:160">
+                    <KeyFrameDouble value="0" interpolationType="cubic" id="0:161"/>
+                    <KeyFrameDouble value="-0.10" interpolationType="cubic" frame="60" id="0:162"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="105" id="0:163"/>
+                    <KeyFrameDouble value="0.07" interpolationType="cubic" frame="150" id="0:164"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="180" id="0:165"/>
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
@@ -299,7 +565,27 @@
         <!-- Piscada. 5s em loop, fora do compasso da respiracao, com duas
              piscadas em tempos diferentes para nao soar mecanico. -->
         <LinearAnimation loopValue="loop" duration="300" name="Piscar" id="0:51">
-            <KeyedObject objectId="0:20">
+            <KeyedObject objectId="0:20" id="0:166">
+                <KeyedProperty property="opacity" id="0:167">
+                    <KeyFrameDouble value="0" interpolationType="hold" id="0:168"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="40" id="0:169"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="46" id="0:170"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="208" id="0:171"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="213" id="0:172"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:21" id="0:173">
+                <KeyedProperty property="opacity" id="0:174">
+                    <KeyFrameDouble value="0" interpolationType="hold" id="0:175"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="40" id="0:176"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="46" id="0:177"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="208" id="0:178"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="213" id="0:179"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:310">
                 <KeyedProperty property="opacity">
                     <KeyFrameDouble value="0" interpolationType="hold"/>
                     <KeyFrameDouble value="1" interpolationType="hold" frame="40"/>
@@ -309,7 +595,47 @@
                 </KeyedProperty>
             </KeyedObject>
 
-            <KeyedObject objectId="0:21">
+            <KeyedObject objectId="0:311">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="40"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="46"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="208"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="213"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:313">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="40"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="46"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="208"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="213"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:314">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="40"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="46"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="208"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="213"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:316">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="40"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="46"/>
+                    <KeyFrameDouble value="1" interpolationType="hold" frame="208"/>
+                    <KeyFrameDouble value="0" interpolationType="hold" frame="213"/>
+                </KeyedProperty>
+            </KeyedObject>
+
+            <KeyedObject objectId="0:317">
                 <KeyedProperty property="opacity">
                     <KeyFrameDouble value="0" interpolationType="hold"/>
                     <KeyFrameDouble value="1" interpolationType="hold" frame="40"/>
@@ -323,51 +649,123 @@
         <!-- Reacao ao toque: agacha, pula, estica no ar e amortece na
              aterrissagem. A cauda da um tranco no impulso. 0,67s. -->
         <LinearAnimation duration="40" name="Reagir" id="0:52">
-            <KeyedObject objectId="0:12">
-                <KeyedProperty property="y">
-                    <KeyFrameDouble value="0" interpolationType="cubic"/>
-                    <KeyFrameDouble value="10" interpolationType="cubic" frame="6"/>
-                    <KeyFrameDouble value="-87" interpolationType="cubic" frame="15"/>
-                    <KeyFrameDouble value="-97" interpolationType="cubic" frame="21"/>
-                    <KeyFrameDouble value="0" interpolationType="cubic" frame="28"/>
-                    <KeyFrameDouble value="0" interpolationType="cubic" frame="40"/>
+            <KeyedObject objectId="0:12" id="0:180">
+                <KeyedProperty property="y" id="0:181">
+                    <KeyFrameDouble value="0" interpolationType="cubic" id="0:182"/>
+                    <KeyFrameDouble value="10" interpolationType="cubic" frame="6" id="0:183"/>
+                    <KeyFrameDouble value="-87" interpolationType="cubic" frame="15" id="0:184"/>
+                    <KeyFrameDouble value="-97" interpolationType="cubic" frame="21" id="0:185"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="28" id="0:186"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="40" id="0:187"/>
                 </KeyedProperty>
             </KeyedObject>
 
-            <KeyedObject objectId="0:11">
-                <KeyedProperty property="scaleY">
-                    <KeyFrameDouble value="1" interpolationType="cubic"/>
-                    <KeyFrameDouble value="0.90" interpolationType="cubic" frame="6"/>
-                    <KeyFrameDouble value="1.09" interpolationType="cubic" frame="15"/>
-                    <KeyFrameDouble value="1.04" interpolationType="cubic" frame="21"/>
-                    <KeyFrameDouble value="0.91" interpolationType="cubic" frame="28"/>
-                    <KeyFrameDouble value="1.03" interpolationType="cubic" frame="34"/>
-                    <KeyFrameDouble value="1" interpolationType="cubic" frame="40"/>
+            <KeyedObject objectId="0:11" id="0:188">
+                <KeyedProperty property="scaleY" id="0:189">
+                    <KeyFrameDouble value="1" interpolationType="cubic" id="0:190"/>
+                    <KeyFrameDouble value="0.90" interpolationType="cubic" frame="6" id="0:191"/>
+                    <KeyFrameDouble value="1.09" interpolationType="cubic" frame="15" id="0:192"/>
+                    <KeyFrameDouble value="1.04" interpolationType="cubic" frame="21" id="0:193"/>
+                    <KeyFrameDouble value="0.91" interpolationType="cubic" frame="28" id="0:194"/>
+                    <KeyFrameDouble value="1.03" interpolationType="cubic" frame="34" id="0:195"/>
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="40" id="0:196"/>
                 </KeyedProperty>
-                <KeyedProperty property="scaleX">
-                    <KeyFrameDouble value="1" interpolationType="cubic"/>
-                    <KeyFrameDouble value="1.08" interpolationType="cubic" frame="6"/>
-                    <KeyFrameDouble value="0.94" interpolationType="cubic" frame="15"/>
-                    <KeyFrameDouble value="0.97" interpolationType="cubic" frame="21"/>
-                    <KeyFrameDouble value="1.09" interpolationType="cubic" frame="28"/>
-                    <KeyFrameDouble value="0.98" interpolationType="cubic" frame="34"/>
-                    <KeyFrameDouble value="1" interpolationType="cubic" frame="40"/>
+                <KeyedProperty property="scaleX" id="0:197">
+                    <KeyFrameDouble value="1" interpolationType="cubic" id="0:198"/>
+                    <KeyFrameDouble value="1.08" interpolationType="cubic" frame="6" id="0:199"/>
+                    <KeyFrameDouble value="0.94" interpolationType="cubic" frame="15" id="0:200"/>
+                    <KeyFrameDouble value="0.97" interpolationType="cubic" frame="21" id="0:201"/>
+                    <KeyFrameDouble value="1.09" interpolationType="cubic" frame="28" id="0:202"/>
+                    <KeyFrameDouble value="0.98" interpolationType="cubic" frame="34" id="0:203"/>
+                    <KeyFrameDouble value="1" interpolationType="cubic" frame="40" id="0:204"/>
                 </KeyedProperty>
             </KeyedObject>
 
-            <KeyedObject objectId="0:34">
-                <KeyedProperty property="rotation">
-                    <KeyFrameDouble value="0" interpolationType="cubic"/>
-                    <KeyFrameDouble value="-0.42" interpolationType="cubic" frame="10"/>
-                    <KeyFrameDouble value="0.18" interpolationType="cubic" frame="22"/>
-                    <KeyFrameDouble value="-0.06" interpolationType="cubic" frame="31"/>
-                    <KeyFrameDouble value="0" interpolationType="cubic" frame="40"/>
+            <KeyedObject objectId="0:34" id="0:205">
+                <KeyedProperty property="rotation" id="0:206">
+                    <KeyFrameDouble value="0" interpolationType="cubic" id="0:207"/>
+                    <KeyFrameDouble value="-0.42" interpolationType="cubic" frame="10" id="0:208"/>
+                    <KeyFrameDouble value="0.18" interpolationType="cubic" frame="22" id="0:209"/>
+                    <KeyFrameDouble value="-0.06" interpolationType="cubic" frame="31" id="0:210"/>
+                    <KeyFrameDouble value="0" interpolationType="cubic" frame="40" id="0:211"/>
                 </KeyedProperty>
             </KeyedObject>
         </LinearAnimation>
 
         <!-- Estado de repouso da camada "reacao": nao mexe em nada. -->
         <LinearAnimation duration="1" name="Parado" id="0:53"/>
+
+        <!-- Interruptores de rosto: um quadro so, so opacidade do grupo. -->
+        <LinearAnimation duration="1" name="Rosto0Nao" id="0:330">
+            <KeyedObject objectId="0:300">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="1" name="Rosto0Sim" id="0:331">
+            <KeyedObject objectId="0:300">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="1" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="1" name="Rosto1Nao" id="0:332">
+            <KeyedObject objectId="0:301">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="1" name="Rosto1Sim" id="0:333">
+            <KeyedObject objectId="0:301">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="1" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="1" name="Rosto2Nao" id="0:334">
+            <KeyedObject objectId="0:302">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="1" name="Rosto2Sim" id="0:335">
+            <KeyedObject objectId="0:302">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="1" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="1" name="Rosto3Nao" id="0:336">
+            <KeyedObject objectId="0:303">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="1" name="Rosto3Sim" id="0:337">
+            <KeyedObject objectId="0:303">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="1" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="1" name="Rosto4Nao" id="0:338">
+            <KeyedObject objectId="0:304">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="0" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
+        <LinearAnimation duration="1" name="Rosto4Sim" id="0:339">
+            <KeyedObject objectId="0:304">
+                <KeyedProperty property="opacity">
+                    <KeyFrameDouble value="1" interpolationType="hold"/>
+                </KeyedProperty>
+            </KeyedObject>
+        </LinearAnimation>
     </Artboard>
 
     <ImageAsset file="cabeca.png" name="cabeca" id="0:60"/>
@@ -381,16 +779,27 @@
     <ImageAsset file="tenis.png" name="tenis" id="0:68"/>
     <ImageAsset file="olho_esq_fechado.png" name="olho_esq_fechado" id="0:69"/>
     <ImageAsset file="olho_dir_fechado.png" name="olho_dir_fechado" id="0:70"/>
+    <ImageAsset file="cabeca_mood0.png" name="cabeca_mood0" id="0:320"/>
+    <ImageAsset file="cabeca_mood1.png" name="cabeca_mood1" id="0:321"/>
+    <ImageAsset file="cabeca_mood3.png" name="cabeca_mood3" id="0:322"/>
+    <ImageAsset file="cabeca_mood4.png" name="cabeca_mood4" id="0:323"/>
+    <ImageAsset file="mood0_olho_esq_fechado.png" name="mood0_olho_esq_fechado" id="0:324"/>
+    <ImageAsset file="mood0_olho_dir_fechado.png" name="mood0_olho_dir_fechado" id="0:325"/>
+    <ImageAsset file="mood1_olho_esq_fechado.png" name="mood1_olho_esq_fechado" id="0:326"/>
+    <ImageAsset file="mood1_olho_dir_fechado.png" name="mood1_olho_dir_fechado" id="0:327"/>
+    <ImageAsset file="mood3_olho_esq_fechado.png" name="mood3_olho_esq_fechado" id="0:328"/>
+    <ImageAsset file="mood3_olho_dir_fechado.png" name="mood3_olho_dir_fechado" id="0:329"/>
 
-    <!-- Rampas de postura pelo mood. Enquanto nao houver rosto por mood,
-         e so por aqui que o humor aparece. -->
+    <!-- Rampas de postura pelo mood, por cima do rosto de cada mood. A
+         cabeca gira pouco: as cabecas dos moods 0 e 1 ja vem caidas na
+         arte, e somar o giro cheio tombava demais. -->
     <DataConverterRangeMapper minInput="0" maxInput="4" minOutput="30" maxOutput="-6"
                               clampLower="true" clampUpper="true"
                               name="moodParaAltura" id="0:80"/>
     <DataConverterRangeMapper minInput="0" maxInput="4" minOutput="0.06" maxOutput="-0.015"
                               clampLower="true" clampUpper="true"
                               name="moodParaTronco" id="0:81"/>
-    <DataConverterRangeMapper minInput="0" maxInput="4" minOutput="0.12" maxOutput="-0.04"
+    <DataConverterRangeMapper minInput="0" maxInput="4" minOutput="0.03" maxOutput="-0.01"
                               clampLower="true" clampUpper="true"
                               name="moodParaCabeca" id="0:82"/>
     <DataConverterRangeMapper minInput="0" maxInput="4" minOutput="0.28" maxOutput="-0.22"
@@ -401,8 +810,8 @@
         <ViewModelPropertyNumber name="mood" id="0:91"/>
         <ViewModelPropertyTrigger name="tap" id="0:92"/>
         <ViewModelInstance exports="true" name="Default" id="0:93">
-            <ViewModelInstanceNumber propertyValue="2" viewModelPropertyId="0:91"/>
-            <ViewModelInstanceTrigger viewModelPropertyId="0:92"/>
+            <ViewModelInstanceNumber propertyValue="2" viewModelPropertyId="0:91" id="0:212"/>
+            <ViewModelInstanceTrigger viewModelPropertyId="0:92" id="0:213"/>
         </ViewModelInstance>
     </ViewModel>
 </Rive>

@@ -2,3 +2,6 @@ name: tasky_v2
 logs:
   file: build/rive.log
   problems: build/problems.log
+push:
+  projectId: 2029144
+  fileId: 2717295

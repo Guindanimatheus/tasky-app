@@ -1,4 +1,4 @@
-name: flutter_application_1
+name: tasky
 description: "Tasky - tarefas gamificadas, offline."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -67,6 +67,7 @@ flutter:
     # publicado — `rive . --publish` exige sessão. Até lá o app usa o rig
     # antigo, que anima igual mas está em escala ~1/3 e sai menos nítido.
     - assets/mascote/tasky_scene.riv
+    - assets/mascote/tasky_v2.riv
     # Arte parada: o caminho alternativo de `mascoteParado`, e a fonte
     # dos cinco moods enquanto o rig só tem o corpo base.
     - assets/avatar/mood0.webp
